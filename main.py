@@ -17,7 +17,7 @@ class Template:
         for k, v in vars(args).items():
             setattr(config, k, v)
         config.dataname = config.data_name
-        set_seed(config.seed)
+        # set_seed(config.seed)
 
         config.device = torch.device('cuda:{}'.format(config.cuda_index) if torch.cuda.is_available() else 'cpu')
         names = [config.model_size, config.dataname] + names
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--cuda_index', default=0)
     parser.add_argument('-r', '--reasoning', default='thor', choices=['prompt', 'thor'],
                         help='with one-step prompt or multi-step thor reasoning')
-    parser.add_argument('-z', '--zero_shot', action='store_true', default=True,
+    parser.add_argument('-z', '--zero_shot', action='store_true',
                         help='running under zero-shot mode or fine-tune mode')
     parser.add_argument('-d', '--data_name', default='laptops', choices=['restaurants', 'laptops'],
                         help='semeval data name')

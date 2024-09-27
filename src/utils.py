@@ -55,9 +55,8 @@ def set_seed(seed):
 
 
 def load_params_LLM(config, model, fold_data):
-    no_decay = ['bias', 'LayerNorm.weight']
+    no_decay = ['bias', 'layer_norm.weight']
     named = (list(model.named_parameters()))
-    no_decay = ['bias', 'LayerNorm.weight']
     optimizer_grouped_parameters = [
         {'params': [p for n, p in named if not any(nd in n for nd in no_decay)],
          'lr': float(config.bert_lr),

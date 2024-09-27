@@ -23,7 +23,7 @@ class PromptTrainer:
 
     def train(self):
         best_score, best_iter = 0, -1
-        for epoch in tqdm(range(self.config.epoch_size)):
+        for epoch in tqdm(range(self.config.epoch_size), position=0):
             self.model.global_epoch = epoch
             self.global_epoch = epoch
             self.train_step()
@@ -59,7 +59,7 @@ class PromptTrainer:
 
     def train_step(self):
         self.model.train()
-        train_data = tqdm(self.train_loader)
+        train_data = tqdm(self.train_loader, position=0)
         losses = []
         for i, data in enumerate(train_data):
             loss = self.model(**data)
@@ -76,7 +76,7 @@ class PromptTrainer:
         self.model.eval()
         dataLoader = self.valid_loader if dataLoader is None else dataLoader
         dataiter = dataLoader
-        for i, data in tqdm(enumerate(dataiter), total=dataLoader.data_length):
+        for i, data in tqdm(enumerate(dataiter), total=dataLoader.data_length, position=0):
             with torch.no_grad():
                 output = self.model.evaluate(**data)
                 self.add_output(data, output)
@@ -145,7 +145,7 @@ class ThorTrainer:
 
     def train(self):
         best_score, best_iter = 0, -1
-        for epoch in tqdm(range(self.config.epoch_size)):
+        for epoch in tqdm(range(self.config.epoch_size), position=0):
             self.model.global_epoch = epoch
             self.global_epoch = epoch
             self.train_step()
@@ -261,7 +261,7 @@ class ThorTrainer:
 
     def train_step(self):
         self.model.train()
-        train_data = tqdm(self.train_loader, total=self.train_loader.data_length)
+        train_data = tqdm(self.train_loader, total=self.train_loader.data_length, position=0)
 
         losses = []
         for i, data in enumerate(train_data):
@@ -290,7 +290,7 @@ class ThorTrainer:
         self.model.eval()
         dataLoader = self.valid_loader if dataLoader is None else dataLoader
         dataiter = dataLoader
-        for i, data in tqdm(enumerate(dataiter), total=dataLoader.data_length):
+        for i, data in tqdm(enumerate(dataiter), total=dataLoader.data_length, position=0):
             with torch.no_grad():
                 step_one_inferred_output = self.model.generate(**data)
 

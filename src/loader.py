@@ -1,3 +1,4 @@
+import json
 import os
 import math
 import torch
@@ -142,11 +143,16 @@ class Preprocessor:
                                  '{}_Test_Gold_Implicit_Labeled_preprocess_finetune.pkl'.format(dataname.capitalize()))
         train_data = pkl.load(open(train_file, 'rb'))
         test_data = pkl.load(open(test_file, 'rb'))
-        ids = np.arange(len(train_data))
+        # 固定验证集大小
+        valid_size = 150
+
+        # 打乱训练集索引
+        ids = np.arange(len(train_data['labels']))
         np.random.shuffle(ids)
-        lens = 150
-        valid_data = {w: v[-lens:] for w, v in train_data.items()}
-        train_data = {w: v[:-lens] for w, v in train_data.items()}
+
+        # 生成训练集和验证集
+        valid_data = {k: [v[i] for i in ids[0:valid_size]] for k, v in train_data.items()}
+        train_data = {k: [v[i] for i in ids[valid_size:]] for k, v in train_data.items()}
 
         return train_data, valid_data, test_data
 
