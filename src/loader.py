@@ -145,7 +145,12 @@ class Preprocessor:
             tmp_data = json.load(f)
 
         for d in tmp_data:
-            d['label'] = 2-d['label']
+           if d['label'] == 0:
+               d['label'] = 1
+           elif d['label'] == 1:
+               d['label'] = 2
+           elif d['label'] == 2:
+               d['label'] = 0
 
         train_data = {
             'raw_texts': [d['text'] for d in tmp_data],
