@@ -131,9 +131,24 @@ class MyDataLoader:
             raise 'choose correct reasoning mode: prompt or thor.'
 
 
+
+
+
 class Preprocessor:
     def __init__(self, config):
         self.config = config
+
+    def load_my_data(self):
+        train_path = os.path.join(self.config.data_dir, self.config.dataname,
+                                  'train_v4.json')
+        with open(train_path, 'r') as f:
+            tmp_data = json.load(f)
+
+        train_data = []
+
+        for d in tmp_data:
+            train_data.append([d['text'], d['aspect'], d['label'], d['imp_flag']])
+        return train_data
 
     def read_file(self):
         dataname = self.config.dataname
@@ -142,6 +157,10 @@ class Preprocessor:
         test_file = os.path.join(self.config.data_dir, dataname,
                                  '{}_Test_Gold_Implicit_Labeled_preprocess_finetune.pkl'.format(dataname.capitalize()))
         train_data = pkl.load(open(train_file, 'rb'))
+
+        train_data = self.load_my_data()
+
+
         test_data = pkl.load(open(test_file, 'rb'))
         # 固定验证集大小
         valid_size = 150
