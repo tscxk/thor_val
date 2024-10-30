@@ -13,7 +13,6 @@ def free_gpu():
     all_mem = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)
     # 获取已用GPU显存
     used_memory = torch.cuda.memory_reserved(0) / (1024 ** 3)  # 已使用显存(GB)
-    print(used_memory)
     if (used_memory / all_mem) > 0.8:
         # 释放显存
         torch.cuda.empty_cache()
