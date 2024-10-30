@@ -144,7 +144,6 @@ class Preprocessor:
         with open(train_path, 'r') as f:
             tmp_data = json.load(f)
 
-        train_data = []
         for d in tmp_data:
             d['label'] = 2-d['label']
 
