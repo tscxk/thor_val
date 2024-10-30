@@ -9,6 +9,14 @@ from collections import defaultdict
 from src.utils import prompt_for_opinion_inferring, prompt_for_polarity_inferring, prompt_for_polarity_label
 
 
+def free_gpu():
+    all_mem = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)
+    # 获取已用GPU显存
+    used_memory = torch.cuda.memory_reserved(0) / (1024 ** 3)  # 已使用显存(GB)
+    if (used_memory / all_mem) > 0.9:
+        # 释放显存
+        torch.cuda.empty_cache()
+
 class PromptTrainer:
     def __init__(self, model, config, train_loader, valid_loader, test_loader) -> None:
         self.model = model
@@ -266,14 +274,20 @@ class ThorTrainer:
         losses = []
         for i, data in enumerate(train_data):
             step_one_inferred_output = self.model.generate(**data)
+            free_gpu()
 
             step_one_inferred_data = self.prepare_step_two(step_one_inferred_output, data)
             step_two_inferred_output = self.model.generate(**step_one_inferred_data)
+            free_gpu()
+
 
             step_two_inferred_data = self.prepare_step_three(step_two_inferred_output, step_one_inferred_data)
             step_three_inferred_output = self.model.generate(**step_two_inferred_data)
+            free_gpu()
 
             step_label_data = self.prepare_step_label(step_three_inferred_output, step_two_inferred_data, data)
+            free_gpu()
+
             loss = self.model(**step_label_data)
             losses.append(loss.item())
             loss.backward()
@@ -285,6 +299,8 @@ class ThorTrainer:
             self.config.optimizer.step()
             self.config.scheduler.step()
             self.model.zero_grad()
+
+            free_gpu()
 
     def evaluate_step(self, dataLoader=None, mode='valid'):
         self.model.eval()
