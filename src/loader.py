@@ -146,8 +146,12 @@ class Preprocessor:
 
         train_data = []
 
-        for d in tmp_data:
-            train_data.append([d['text'], d['aspect'], d['label'], d['imp_flag']])
+        train_data = {
+            'raw_texts': [d['text'] for d in tmp_data],
+            'raw_aspect_terms': [d['aspect'] for d in tmp_data],
+            'implicits': [d['imp_flag'] for d in tmp_data],
+            'labels': [d['label'] for d in tmp_data],
+        }
         return train_data
 
     def read_file(self):
