@@ -41,7 +41,7 @@ class MyDataLoader:
             self.data = pkl.load(open(path, 'rb'))
         else:
             self.data = self.config.preprocessor.forward()
-            pkl.dump(self.data, open(path, 'wb+'))
+            pkl.dump(self.data, open(path, 'wb'))
 
         train_data, valid_data, test_data = self.data[:3]
         self.config.word_dict = self.data[-1]
