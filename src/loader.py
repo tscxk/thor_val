@@ -168,7 +168,7 @@ class Preprocessor:
                                  '{}_Test_Gold_Implicit_Labeled_preprocess_finetune.pkl'.format(dataname.capitalize()))
         train_data = pkl.load(open(train_file, 'rb'))
 
-        train_data = self.load_my_data()
+        # train_data = self.load_my_data()
 
 
         test_data = pkl.load(open(test_file, 'rb'))
